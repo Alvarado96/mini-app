@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-
+//import Searchbar from '../components/Searchbar';
 // const movies = [
 //     {title: 'Mean Girls'},
 //     {title: 'Hackers'},
@@ -8,18 +8,39 @@ import React, {useState, useEffect} from 'react';
 //     {title: 'Ex Machina'},
 //   ];
 
-const MovieList = () => {
+//filtered posts
 
+
+
+const MovieList = ({input}) => {
   let [movies, setMovies] = useState([])
-
+  let filteredData = [];
   useEffect(() => {
     fetch('http://localhost:8080/movies')
     .then (res => res.json())
     .then (data => {
-      console.log(data)
+      //console.log(data)
       setMovies(data)
     })
   }, [])
+
+  if(movies){
+    
+    filteredData = movies.filter((el) => {
+      console.log(el);
+      // If no input then return the original array
+      console.log(input);
+      if(input === '') {
+        return el;
+      }
+      // return the item which contains the user input
+      else {
+        return el.title.toLowerCase().includes(input);
+      }
+  
+    })
+  }
+
 
   return (
     <>
@@ -27,7 +48,7 @@ const MovieList = () => {
       Movies List
     </h1>
       <ul>
-        {movies.map((el) => {
+        {filteredData.map((el) => {
           return <li key={el.id}>{el.title}</li>
         })}
       </ul>
