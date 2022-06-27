@@ -1,4 +1,6 @@
 import React, {useState, useEffect} from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+
 //import Searchbar from '../components/Searchbar';
 // const movies = [
 //     {title: 'Mean Girls'},
@@ -15,6 +17,13 @@ import React, {useState, useEffect} from 'react';
 const MovieList = ({input}) => {
   let [movies, setMovies] = useState([])
   let filteredData = [];
+  const url = useLocation();
+  let location = url.pathname;
+
+  let [inputMovie, setInputMovie] = useState({})
+
+  let navigate = useNavigate();
+
   useEffect(() => {
     fetch('http://localhost:8080/movies')
     .then (res => res.json())
@@ -41,6 +50,25 @@ const MovieList = ({input}) => {
     })
   }
 
+  // Handle when the submit button is clicked to add a movie
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    let res = await fetch('http://localhost:8080/movies', {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(inputMovie)
+    })
+    console.log('Submitted Successfully!')
+    console.log(res);
+    window.location.reload(false);
+    navigate(location);
+  }
+
+  // When user is typing, secretly make this object
+  const handleChange = (event) => {
+    setInputMovie({'title' : event.target.value})
+  }
+
 
   return (
     <>
@@ -52,6 +80,13 @@ const MovieList = ({input}) => {
           return <li key={el.id}>{el.title}</li>
         })}
       </ul>
+      <form onSubmit={handleSubmit}>
+        <label>
+          Title:
+          <input type="text" name="title" onChange={handleChange} />
+        </label>
+        <input type="submit" value="Submit" />
+      </form>
       
     </>
   );

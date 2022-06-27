@@ -7,6 +7,7 @@ import TextField from "@mui/material/TextField";
 //testing searchbar
 function App() {
   const [inputText, setInputText] = useState("");
+  
   let keyUpHandler = (e) => {
     if(e.key === 'Enter'){
       var lowerCase = e.target.value.toLowerCase();
